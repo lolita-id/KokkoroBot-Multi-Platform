@@ -74,7 +74,7 @@ async def add_clan(bot: KokkoroBot, ev: EventInterface, args:ParseResult):
         bm.add_clan(1, args.N, args.S)
         await bot.kkr_send(ev, f'公会建立成功！{args.N} {server_name(args.S)}', at_sender=True)
 
-    
+
 
 @cb_cmd(('查看公会', 'list-clan'), ArgParser('!查看公会'))
 async def list_clan(bot:KokkoroBot, ev:EventInterface, args:ParseResult):
@@ -95,17 +95,17 @@ async def add_member(bot:KokkoroBot, ev:EventInterface, args:ParseResult):
     bm = BattleMaster(ev.get_group_id())
     clan = _check_clan(bm)
 
-    uid = args['@'] or args.uid 
-    name = args[''] or args.name 
+    uid = args['@'] or args.uid
+    name = args[''] or args.name
     author = ev.get_author()
-    
+
     if uid == None:
         uid = ev.get_author_id()
     else:
         if uid != ev.get_author_id():
             _check_admin(ev, '才能添加其他人')
-            if not ev.whether_user_in_group(uid):
-                raise NotFoundError(f'Error: 无法获取该群员信息，请检查{uid}是否属于本群')
+            #  if not ev.whether_user_in_group(uid):
+                #  raise NotFoundError(f'Error: 无法获取该群员信息，请检查{uid}是否属于本群')
         ## if we can't get name from mentions
         # if not name and :
         #     m = await bot.get_group_member_info(self_id=ctx['self_id'], group_id=bm.group, user_id=uid)
@@ -166,8 +166,8 @@ async def batch_add_member(bot:KokkoroBot, ev:EventInterface, args:ParseResult):
     clan = _check_clan(bm)
 
     _check_admin(ev)
-    mlist = ev.get_members_in_group() 
-    
+    mlist = ev.get_members_in_group()
+
     if len(mlist) > 50:
         raise ClanBattleError('群员过多！一键入会仅限50人以内群使用')
 
@@ -279,7 +279,7 @@ async def add_challenge(bot:KokkoroBot, ev:EventInterface, args:ParseResult):
     damage = args.get('')
     if isDD(damage):
         await jiuzhe(bot, ev)
-        
+
 
 
 @cb_cmd(('出尾刀', '收尾', '尾刀', 'add-challenge-last'), ArgParser(usage='!出尾刀 (<伤害值>) (@<id>)', arg_dict={
@@ -367,7 +367,7 @@ class SubscribeData:
         if 'max' not in data or len(data['max']) != 6:
             data['max'] = [99, 6, 6, 6, 6, 6]
         self._data = data
-        
+
     @staticmethod
     def default():
         return SubscribeData({
@@ -376,13 +376,13 @@ class SubscribeData:
             'tree':[], 'lock':[],
             'max': [99, 6, 6, 6, 6, 6]
         })
-    
+
     def get_sub_list(self, boss:int):
         return self._data[str(boss)]
-        
+
     def get_memo_list(self, boss:int):
         return self._data[f'm{boss}']
-    
+
     def get_tree_list(self):
         return self._data['tree']
 
@@ -405,13 +405,13 @@ class SubscribeData:
 
     def add_tree(self, uid:str):
         self._data['tree'].append(uid)
-        
+
     def clear_tree(self):
         self._data['tree'].clear()
-        
+
     def get_lock_info(self):
         return self._data['lock']
-    
+
     def set_lock(self, uid:str, ts):
         self._data['lock'] = [ (uid, ts) ]
 
@@ -494,16 +494,16 @@ async def unsubscribe(bot:KokkoroBot, ev:EventInterface, args:ParseResult):
 
     sub = _load_sub(bm.group)
     boss = args['']
-    boss_name = bm.int2kanji(boss)    
+    boss_name = bm.int2kanji(boss)
     slist = sub.get_sub_list(boss)
     mlist = sub.get_memo_list(boss)
-    limit = sub.get_sub_limit(boss)    
+    limit = sub.get_sub_limit(boss)
     if uid not in slist:
         raise NotFoundError(f'您没有预约{boss_name}王')
     sub.remove_sub(boss, uid)
     _save_sub(sub, bm.group)
     msg = [ f'\n已为您取消预约{boss_name}王！' ]
-    msg.append(f'=== 当前队列 {len(slist)}/{limit} ===')    
+    msg.append(f'=== 当前队列 {len(slist)}/{limit} ===')
     msg.extend(_gen_namelist_text(bot, bm, slist, mlist))
     await bot.kkr_send(ev, '\n'.join(msg), at_sender=True)
 
@@ -588,7 +588,7 @@ async def set_subscribe_limit(bot:KokkoroBot, ev, args:ParseResult):
     if not (0 < limit <= 30):
         raise ClanBattleError('预约上限只能为1~30内的整数')
     sub = _load_sub(bm.group)
-    sub.set_sub_limit(args.B, limit)    
+    sub.set_sub_limit(args.B, limit)
     _save_sub(sub, bm.group)
     await bot.kkr_send(ev, f'{bm.int2kanji(args.B)}王预约上限已设置为：{limit}')
 
@@ -762,7 +762,7 @@ async def stat_damage(bot:KokkoroBot, ev:EventInterface, args:ParseResult):
 
     await bot.kkr_send(ev, fig)
     plt.close()
-    
+
     msg = f"※分数统计请发送“!分数统计”"
     await bot.kkr_send(ev, msg, at_sender=True)
 
@@ -776,7 +776,7 @@ async def stat_score(bot:KokkoroBot, ev:EventInterface, args:ParseResult):
     yyyy, mm, _ = bm.get_yyyymmdd(now)
     stat = bm.stat_score(1, now)
     stat.sort(key=lambda x: x[3], reverse=True)
-    
+
     if not len(stat):
         await bot.kkr_send(ev, f"{clan['name']}{yyyy}年{mm}月会战统计数据为空", at_sender=True)
         return
@@ -835,7 +835,7 @@ async def _do_show_remain(bot:KokkoroBot, ev:EventInterface, args:ParseResult, a
         if r_n or r_e:
             msg.append(f"剩{r_n}刀 补时{r_e}刀 | {bot.kkr_at(uid) if at_user else name}")
             sum_remain += r_n
-    
+
     if len(msg) == 1:
         await bot.kkr_send(ev, f"今日{clan['name']}所有成员均已下班！各位辛苦了！", at_sender=True)
     else:
@@ -961,7 +961,7 @@ async def clan_rank(bot:KokkoroBot, ev:EventInterface, args:ParseResult):
     clan_name = args.get('C')
     leader = args.get('L')
     rank = args.get('R')
-    
+
     # default
     if clan_name == '' and leader == '' and rank == '':
         bm = BattleMaster(ev.get_group_id())
@@ -991,7 +991,7 @@ async def clan_rank(bot:KokkoroBot, ev:EventInterface, args:ParseResult):
         "Content-Type": "application/json",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
     }
-    
+
     try:
         cookies = await get_cookies("https://kengxxiao.github.io/Kyouka/")
         cookies.set('fav', '[]', domain='kengxxiao.github.io') # cookies is a must
@@ -1013,4 +1013,4 @@ async def clan_rank(bot:KokkoroBot, ev:EventInterface, args:ParseResult):
             info += f" 会长 {data['leader_name']}"
         msg.append(info)
     await bot.kkr_send(ev, '\n'.join(msg), at_sender=True)
-    
+
