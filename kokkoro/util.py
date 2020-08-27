@@ -11,6 +11,7 @@ import importlib
 from collections import defaultdict
 from datetime import datetime, timedelta
 from matplotlib import pyplot as plt
+import matplotlib.font_manager as font_manager
 from PIL import Image
 from io import BytesIO
 import itertools
@@ -18,6 +19,9 @@ import itertools
 import kokkoro
 from kokkoro import config
 from kokkoro.typing import Iterable
+
+for font_file in kokkoro.config.FONT_PATH.values():
+    font_manager.fontManager.addfont(os.path.expanduser(font_file))
 
 def to_string(obj):
     if obj == None:
@@ -109,7 +113,7 @@ class FreqLimiter:
 
 class DailyNumberLimiter:
     tz = pytz.timezone('Asia/Shanghai')
-    
+
     def __init__(self, max_num):
         self.today = -1
         self.count = defaultdict(int)
