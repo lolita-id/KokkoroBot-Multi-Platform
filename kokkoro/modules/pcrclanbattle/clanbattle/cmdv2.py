@@ -299,7 +299,7 @@ async def add_challenge_last(bot:KokkoroBot, ev:EventInterface, args:ParseResult
     await process_challenge(bot, ev, challenge)
 
 
-@cb_cmd(('出补时刀', '补时刀', '补时', 'add-challenge-ext'), ArgParser(usage='!出补时刀 <伤害值> (@id)', arg_dict={
+@cb_cmd(('出补时刀', '补时刀', '补偿刀', '补时', 'add-challenge-ext'), ArgParser(usage='!出补时刀 <伤害值> (@id)', arg_dict={
     '': ArgHolder(tip='伤害值', type=damage_int),
     '@': ArgHolder(tip='id', type=str, default=0),
     'R': ArgHolder(tip='周目数', type=round_code, default=0),
@@ -526,7 +526,7 @@ async def call_subscribe(bot:KokkoroBot, ev:EventInterface, round_:int, boss:int
     mlist = sub.get_memo_list(boss)
     tlist = sub.get_tree_list()
     if slist:
-        msg.append(f"您们预约的老{BattleMaster.int2kanji(boss)}出现啦！")
+        msg.append(f"你们预约的老{BattleMaster.int2kanji(boss)}出现啦！")
         msg.extend(_gen_namelist_text(bot, bm, slist, mlist, do_at=True))
     if slist and tlist:
         msg.append("==========")
